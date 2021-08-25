@@ -96,6 +96,16 @@ impl SystemSet {
         self
     }
 
+    pub fn with_system_set(mut self, other: &SystemSet) -> Self {
+        self.systems.extend_from_slice(&other.systems);
+        self.run_criteria = self.run_criteria.or(other.run_criteria);
+        self.labels.extend_from_slice(&other.labels);
+        self.before.extend_from_slice(&other.before);
+        self.after.extend_from_slice(&other.after);
+        self.ambiguity_sets.extend_from_slice(&other.ambiguity_sets);
+        self
+    }
+
     pub fn with_run_criteria<Marker>(mut self, run_criteria: impl IntoRunCriteria<Marker>) -> Self {
         self.run_criteria = Some(run_criteria.into());
         self

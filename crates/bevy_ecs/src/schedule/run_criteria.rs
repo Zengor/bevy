@@ -183,6 +183,7 @@ impl GraphNode for RunCriteriaContainer {
     }
 }
 
+#[derive(Clone)]
 pub enum RunCriteriaDescriptorOrLabel {
     Descriptor(RunCriteriaDescriptor),
     Label(BoxedRunCriteriaLabel),
@@ -194,6 +195,7 @@ pub(crate) enum DuplicateLabelStrategy {
     Discard,
 }
 
+#[derive(Clone)]
 pub struct RunCriteriaDescriptor {
     pub(crate) system: RunCriteriaSystem,
     pub(crate) label: Option<BoxedRunCriteriaLabel>,

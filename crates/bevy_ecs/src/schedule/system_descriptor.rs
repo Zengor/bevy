@@ -34,6 +34,7 @@ use crate::{
 ///     .with_system(do_the_other_thing.after(Something))
 ///     .with_system(do_something_else.exclusive_system().at_end());
 /// ```
+#[derive(Clone)]
 pub enum SystemDescriptor {
     Parallel(ParallelSystemDescriptor),
     Exclusive(ExclusiveSystemDescriptor),
@@ -91,6 +92,7 @@ impl IntoSystemDescriptor<()> for ExclusiveSystemCoerced {
 }
 
 /// Encapsulates a parallel system and information on when it runs in a `SystemStage`.
+#[derive(Clone)]
 pub struct ParallelSystemDescriptor {
     pub(crate) system: BoxedSystem<(), ()>,
     pub(crate) run_criteria: Option<RunCriteriaDescriptorOrLabel>,
@@ -110,6 +112,23 @@ fn new_parallel_descriptor(system: BoxedSystem<(), ()>) -> ParallelSystemDescrip
         ambiguity_sets: Vec::new(),
     }
 }
+
+// impl Clone for ParallelSystemDescriptor {
+//     fn clone(&self) -> Self {
+//         Self {
+//             system: self.system.dyn_clone(),
+//             run_criteria: self.run_criteria.clone(),
+//             labels: self.labels.iter().map(|label| label.dyn_clone()).collect(),
+//             before: self.before.iter().map(|label| label.dyn_clone()).collect(),
+//             after: self.after.iter().map(|label| label.dyn_clone()).collect(),
+//             ambiguity_sets: self
+//                 .ambiguity_sets
+//                 .iter()
+//                 .map(|label| label.dyn_clone())
+//                 .collect(),
+//         }
+//     }
+// }
 
 pub trait ParallelSystemDescriptorCoercion<Params> {
     /// Assigns a run criteria to the system. Can be a new descriptor or a label of a
@@ -224,6 +243,7 @@ pub(crate) enum InsertionPoint {
 }
 
 /// Encapsulates an exclusive system and information on when it runs in a `SystemStage`.
+#[derive(Clone)]
 pub struct ExclusiveSystemDescriptor {
     pub(crate) system: Box<dyn ExclusiveSystem>,
     pub(crate) run_criteria: Option<RunCriteriaDescriptorOrLabel>,
